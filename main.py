@@ -46,3 +46,25 @@ COMMON_BREEDS = [
     "BOXER", "HAVANESE", "FRENCH BULLDOG", "BICHON FRISE", "MALTESE CROSS",
     "AMERICAN PIT BULL TERRIER/PIT BULL", "MIXED/OTHER",
 ]
+
+# ---------------------------------------------------------------------------
+# .env helpers
+# ---------------------------------------------------------------------------
+def env_str(name, default):
+    return os.getenv(name, default)
+
+def env_float(name, default):
+    return float(os.getenv(name, str(default)))
+
+def env_bool(name, default):
+    return os.getenv(name, str(default)).strip().lower() in ("1", "true", "yes", "on")
+
+def env_list(name, default):
+    raw = os.getenv(name, default)
+    return [x.strip() for x in raw.split(",") if x.strip()]
+
+
+def sql_in_clause(column, values):
+    """Build a Spark-SQL IN (...) predicate from a list of string values."""
+    quoted = ", ".join("'{}'".format(v.replace("'", "''")) for v in values)
+    return "{} IN ({})".format(column, quoted)
