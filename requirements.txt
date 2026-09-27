@@ -1,0 +1,8 @@
+# Spark engine 
+pyspark>=3.3.0 
+
+# Tumult Analytics
+tmlt.analytics>=0.16.0
+
+# .env
+python-dotenv>=1.0.0
