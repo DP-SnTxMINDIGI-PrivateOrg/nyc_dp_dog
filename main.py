@@ -14,3 +14,19 @@ from tmlt.analytics.protected_change import AddOneRow    # AddMaxRows: see Decis
 from tmlt.analytics.query_expr import CountMechanism
 
 
+# ===========================================================================
+# Decision — PureDP now, ApproxDP door left open.
+# BUDGET_CLS is the single swap point. Moving to (epsilon, delta) DP means:
+#   1. from tmlt.analytics.privacy_budget import ApproxDPBudget
+#   2. BUDGET_CLS = ApproxDPBudget      (and give budget() a delta below)
+# QueryBuilder / KeySet / evaluate() do not depend on which budget type is used,
+# so nothing else in this file changes.
+# ===========================================================================
+BUDGET_CLS = PureDPBudget
+
+
+def budget(epsilon):
+    """Construct a per-spend budget object. One place to change for ApproxDP."""
+    return BUDGET_CLS(epsilon)
+    # ApproxDP variant:  return BUDGET_CLS(epsilon, DELTA)
+
