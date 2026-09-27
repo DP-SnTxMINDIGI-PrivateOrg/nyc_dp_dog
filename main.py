@@ -30,3 +30,19 @@ def budget(epsilon):
     return BUDGET_CLS(epsilon)
     # ApproxDP variant:  return BUDGET_CLS(epsilon, DELTA)
 
+# ---------------------------------------------------------------------------
+# Constants for the Dog demo. These are public-domain, so they are not a privacy risk to hard-code.
+# ---------------------------------------------------------------------------
+POPULAR_NAMES = [
+    "BELLA", "MAX", "CHARLIE", "COCO", "LOLA", "LUCKY", "ROCKY", "BUDDY",
+    "PRINCESS", "LUCY", "DAISY", "TEDDY", "LILY", "GINGER", "MOLLY", "JACK",
+    "TOBY", "BAILEY", "ANGEL", "ZEUS",
+]
+
+COMMON_BREEDS = [
+    "YORKSHIRE TERRIER", "SHIH TZU", "CHIHUAHUA", "MALTESE",
+    "LABRADOR RETRIEVER", "PIT BULL", "GERMAN SHEPHERD DOG", "POODLE",
+    "BEAGLE", "DACHSHUND", "GOLDEN RETRIEVER", "COCKER SPANIEL", "PUG",
+    "BOXER", "HAVANESE", "FRENCH BULLDOG", "BICHON FRISE", "MALTESE CROSS",
+    "AMERICAN PIT BULL TERRIER/PIT BULL", "MIXED/OTHER",
+]
