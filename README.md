@@ -12,3 +12,22 @@ virtualenv --python=python3.12 .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
+OR 
+
+```bash
+pip3 install -r requirements.txt
+```
+
+Use Docker:
+- Build Docker image
+```bash
+docker build -t nyc-dog-dp .
+```
+
+Run the Docker image:
+```bash
+docker run --rm \
+  -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro" \
+  -v "$PWD/.env:/app/.env:ro" \
+  nyc-dog-dp
+```

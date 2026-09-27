@@ -11,8 +11,7 @@ from tmlt.analytics.query_builder import QueryBuilder
 from tmlt.analytics.keyset import KeySet
 from tmlt.analytics.privacy_budget import PureDPBudget  # ApproxDPBudget: see Decision 5
 from tmlt.analytics.protected_change import AddOneRow    # AddMaxRows: see Decision 3
-from tmlt.analytics.query_expr import CountMechanism
-
+from tmlt.analytics import CountMechanism
 
 # ===========================================================================
 # Decision — PureDP now, ApproxDP door left open.
@@ -128,7 +127,19 @@ def main():
     # the INPUT before the Session exists, so it costs no privacy budget. It
     # also removes case-mismatch traps where a KeySet value silently matches
     # zero rows.
-    raw = spark.read.csv(CSV_PATH, header=True, inferSchema=True)
+    # The NYC Open Data export is a semicolon-delimited CSV (not comma) and
+    # carries a UTF-8 BOM on the first header token. Tell Spark both.
+    raw = spark.read.csv(
+        CSV_PATH,
+        header=True,
+        inferSchema=True,
+        sep=";",
+    )
+
+    # Defensive: strip UTF-8 BOM / stray whitespace from header names so
+    # F.col("AnimalName") resolves.
+    raw = raw.toDF(*[c.lstrip("\ufeff").strip() for c in raw.columns])
+
     raw = (
         raw
         .withColumn("AnimalName", F.upper(F.trim(F.col("AnimalName").cast("string"))))

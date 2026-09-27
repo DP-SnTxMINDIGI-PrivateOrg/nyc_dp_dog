@@ -1,0 +1,190 @@
+sahbaaz.ansari@UNIK736VYNJJX nyc_dp_dog % docker run --rm \                                  
+  -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro" \
+  -v "$PWD/.env:/app/.env:ro" \
+  nyc-dog-dp
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/09/27 18:23:09 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+======================================================================          
+NYC Dog-License Differential Privacy POC (Tumult Analytics)
+======================================================================
+Privacy model : pure epsilon-DP  (PureDPBudget)
+Privacy unit  : AddOneRow (one license record)
+Lifetime eps  : 3.0
+Per-query eps : 0.5
+Show exact    : True  (public dataset only)
+----------------------------------------------------------------------
+
+Q1. How many Chihuahuas are in ZIP 10022?
+   DP answer   : 230
+   exact       : 226  (public data only)
+   [budget] spent eps=0.500  remaining eps=2.500
+
+Q2. What is the most popular dog name?
+   DP answer   : BELLA  (noisy count 8903)
+   exact       : BELLA  (count 8899)  (public data only)
+   [budget] spent eps=1.000  remaining eps=2.000
+
+Q3. What is the most common breed in Queens?
+   DP answer   : YORKSHIRE TERRIER  (noisy count 9992)
+   exact       : YORKSHIRE TERRIER  (count 9995)  (public data only)
+   [budget] spent eps=1.500  remaining eps=1.500
+
+======================================================================
+Done. Spent eps=1.500 of 3.000 lifetime budget.
+======================================================================
+sahbaaz.ansari@UNIK736VYNJJX nyc_dp_dog % docker run --rm \
+  -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro" \
+  -v "$PWD/.env:/app/.env:ro" \
+  nyc-dog-dp
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/09/27 18:30:12 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+======================================================================          
+NYC Dog-License Differential Privacy POC (Tumult Analytics)
+======================================================================
+Privacy model : pure epsilon-DP  (PureDPBudget)
+Privacy unit  : AddOneRow (one license record)
+Lifetime eps  : 3.0
+Per-query eps : 0.001
+Show exact    : True  (public dataset only)
+----------------------------------------------------------------------
+
+Q1. How many Chihuahuas are in ZIP 10022?
+   DP answer   : -1420
+   exact       : 226  (public data only)
+   [budget] spent eps=0.001  remaining eps=2.999
+
+Q2. What is the most popular dog name?
+   DP answer   : LOLA  (noisy count 8787)
+   exact       : BELLA  (count 8899)  (public data only)
+   [budget] spent eps=0.002  remaining eps=2.998
+
+Q3. What is the most common breed in Queens?
+   DP answer   : YORKSHIRE TERRIER  (noisy count 11927)
+   exact       : YORKSHIRE TERRIER  (count 9995)  (public data only)
+   [budget] spent eps=0.003  remaining eps=2.997
+
+======================================================================
+Done. Spent eps=0.003 of 3.000 lifetime budget.
+======================================================================
+sahbaaz.ansari@UNIK736VYNJJX nyc_dp_dog % docker run --rm \
+  -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro" \
+  -v "$PWD/.env:/app/.env:ro" \
+  nyc-dog-dp
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/09/27 18:32:11 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+======================================================================          
+NYC Dog-License Differential Privacy POC (Tumult Analytics)
+======================================================================
+Privacy model : pure epsilon-DP  (PureDPBudget)
+Privacy unit  : AddOneRow (one license record)
+Lifetime eps  : 3.0
+Per-query eps : 0.01
+Show exact    : True  (public dataset only)
+----------------------------------------------------------------------
+
+Q1. How many Chihuahuas are in ZIP 10022?
+   DP answer   : 42
+   exact       : 226  (public data only)
+   [budget] spent eps=0.010  remaining eps=2.990
+
+Q2. What is the most popular dog name?
+   DP answer   : BELLA  (noisy count 8750)
+   exact       : BELLA  (count 8899)  (public data only)
+   [budget] spent eps=0.020  remaining eps=2.980
+
+Q3. What is the most common breed in Queens?
+   DP answer   : YORKSHIRE TERRIER  (noisy count 9809)
+   exact       : YORKSHIRE TERRIER  (count 9995)  (public data only)
+   [budget] spent eps=0.030  remaining eps=2.970
+
+======================================================================
+Done. Spent eps=0.030 of 3.000 lifetime budget.
+======================================================================
+sahbaaz.ansari@UNIK736VYNJJX nyc_dp_dog % docker run --rm \
+  -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro" \
+  -v "$PWD/.env:/app/.env:ro" \
+  nyc-dog-dp
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/09/27 18:42:02 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+======================================================================          
+NYC Dog-License Differential Privacy POC (Tumult Analytics)
+======================================================================
+Privacy model : pure epsilon-DP  (PureDPBudget)
+Privacy unit  : AddOneRow (one license record)
+Lifetime eps  : 3.0
+Per-query eps : 0.15
+Show exact    : True  (public dataset only)
+----------------------------------------------------------------------
+
+Q1. How many Chihuahuas are in ZIP 10022?
+   DP answer   : 234
+   exact       : 226  (public data only)
+   [budget] spent eps=0.150  remaining eps=2.850
+
+Q2. What is the most popular dog name?
+   DP answer   : BELLA  (noisy count 8884)
+   exact       : BELLA  (count 8899)  (public data only)
+   [budget] spent eps=0.300  remaining eps=2.700
+
+Q3. What is the most common breed in Queens?
+   DP answer   : YORKSHIRE TERRIER  (noisy count 9996)
+   exact       : YORKSHIRE TERRIER  (count 9995)  (public data only)
+   [budget] spent eps=0.450  remaining eps=2.550
+
+======================================================================
+Done. Spent eps=0.450 of 3.000 lifetime budget.
+======================================================================
+sahbaaz.ansari@UNIK736VYNJJX nyc_dp_dog % docker run --rm \
+  -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro" \
+  -v "$PWD/.env:/app/.env:ro" \
+  nyc-dog-dp
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/09/27 18:43:59 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+======================================================================          
+NYC Dog-License Differential Privacy POC (Tumult Analytics)
+======================================================================
+Privacy model : pure epsilon-DP  (PureDPBudget)
+Privacy unit  : AddOneRow (one license record)
+Lifetime eps  : 3.0
+Per-query eps : 0.0001
+Show exact    : True  (public dataset only)
+----------------------------------------------------------------------
+
+Q1. How many Chihuahuas are in ZIP 10022?
+   DP answer   : 14874
+   exact       : 226  (public data only)
+   [budget] spent eps=0.000  remaining eps=3.000
+
+Q2. What is the most popular dog name?
+   DP answer   : BUDDY  (noisy count 16908)
+   exact       : BELLA  (count 8899)  (public data only)
+   [budget] spent eps=0.000  remaining eps=3.000
+
+Q3. What is the most common breed in Queens?
+   DP answer   : HAVANESE  (noisy count 36220)
+   exact       : YORKSHIRE TERRIER  (count 9995)  (public data only)
+   [budget] spent eps=0.000  remaining eps=3.000
+
+======================================================================
+Done. Spent eps=0.000 of 3.000 lifetime budget.
+======================================================================
