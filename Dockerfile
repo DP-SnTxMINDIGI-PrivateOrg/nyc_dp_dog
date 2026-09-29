@@ -1,10 +1,8 @@
 # NYC Dog-License DP POC — Tumult Analytics runs on Spark, which needs a JVM.
-# We bundle a JRE so the host does NOT need Java installed (Decision 4).
+# We bundle a JRE so the host does NOT need Java installed 
 #
 # Base: eclipse-temurin:11-jre-jammy
 #   - Temurin = official OpenJDK build from Adoptium, ships Java 11.
-#   - Ubuntu 22.04 "jammy" ships Python 3.10 (same version as the earlier
-#     python:3.10-slim base), so no extra Python toolchain setup.
 #   - We deliberately use Java 11, not 17: PySpark 3.5 + Apache Arrow do not
 #     work cleanly on Java 17 (Arrow's MemoryUtil needs sun.misc.Unsafe /
 #     DirectByteBuffer, which Java 17 locks down).
@@ -28,12 +26,12 @@ RUN java -version && python --version
 
 WORKDIR /app
 
-# --- Python deps (pins from Decision 4) --------------------------------------
+# --- Python deps (pins from Decision) --------------------------------------
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-# --- App: single file, nothing more (Decision 4: stays minimal) --------------
+# --- App: single file, nothing more (Decision : stays minimal) --------------
 COPY main.py .
 
 # The CSV and .env are RUNTIME bind-mounts, not baked into the image.
