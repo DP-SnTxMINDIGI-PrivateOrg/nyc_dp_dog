@@ -1,37 +1,3 @@
-# nyc-dog-dataset-dp
-
-Dog Dataset DP POC using Tumult Analytics 
-
-## Tumult analytics
-
-Tumult Analytics 0.16+ requires Python 3.10 through 3.12. Create or select a
-Python 3.12 environment before installing the dependencies:
-
-```bash
-virtualenv --python=python3.12 .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-```
-OR 
-
-```bash
-pip3 install -r requirements.txt
-```
-
-Use Docker:
-- Build Docker image
-```bash
-docker build -t nyc-dog-dp .
-```
-
-Run the Docker image:
-```bash
-docker run --rm \
-  -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro" \
-  -v "$PWD/.env:/app/.env:ro" \
-  nyc-dog-dp
-```
-
 # NYC Dog Licensing Differential Privacy POC
 
 A proof of concept for running aggregate queries over the NYC Dog Licensing
@@ -41,6 +7,10 @@ row-level differential privacy for scalar counts and grouped histograms.
 This repository is a small command-line application: it loads configuration,
 reads the CSV, creates one Tumult privacy Session, evaluates three queries,
 prints their results and budget usage, then stops Spark.
+
+# nyc-dog-dataset-dp
+
+Dog Dataset DP POC using Tumult Analytics: https://github.com/sahbaazansari/NYC_Dog_DP_Dataset/blob/main/NYC_Dog_Licensing_Dataset_20260911.csv
 
 ## What It Does
 
