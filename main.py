@@ -25,7 +25,7 @@ BUDGET_CLS = PureDPBudget
 
 
 def budget(epsilon):
-    """Construct a per-spend budget object. One place to change for ApproxDP."""
+    """Construct a per-spend budget object"""
     return BUDGET_CLS(epsilon)
     # ApproxDP variant:  return BUDGET_CLS(epsilon, DELTA)
 
@@ -136,8 +136,8 @@ def main():
         sep=";",
     )
 
-    # Defensive: strip UTF-8 BOM / stray whitespace from header names so
-    # F.col("AnimalName") resolves.
+    # strip UTF-8 BOM / stray whitespace from header names so
+    # F.col("AnimalName")
     raw = raw.toDF(*[c.lstrip("\ufeff").strip() for c in raw.columns])
 
     raw = (
