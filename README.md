@@ -28,6 +28,10 @@ appropriate for your use case before relying on it.
 
 ## Processing Flow
 
+<img width="1254" height="756" alt="POC-diagram" src="https://github.com/user-attachments/assets/9b5f47c4-7093-4378-9a95-f5931cf2bc56" />
+
+
+
 ```text
 Docker runs: python main.py
         |
