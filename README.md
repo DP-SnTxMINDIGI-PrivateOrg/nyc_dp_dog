@@ -192,7 +192,7 @@ additional spends in the current query patterns; each evaluated count or
 histogram does. The Session's budget ledger exists only for the current
 process run and is recreated when the program starts again.
 
-### Important Current Example Setting
+### Current Example Setting
 
 The current `.env.example` sets:
 
@@ -201,18 +201,9 @@ DP_TOTAL_EPSILON=3.0
 DP_PER_QUERY_EPSILON=0.0001
 ```
 
-With three evaluated questions, the program spends `0.0003` epsilon in one
-run, assuming all three complete. The comments in `.env.example` still
-describe a `0.5` per-query setting and `1.5` total spend; those comments do
-not match the active value. For a sensitivity-1 count, Laplace noise has
-scale `1 / epsilon`; epsilon `0.0001` therefore gives a scale of `10,000`,
-which can make the released counts extremely noisy. Set the value
-intentionally for the demonstration and privacy goal.
-
 `SHOW_EXACT=true` calculates and prints exact results directly from the raw
-Spark DataFrame. These exact outputs are not differentially private and do
-not pass through `session.evaluate(...)`. Keep this enabled only when exposing
-the underlying exact data is acceptable, such as for this public-data demo.
+Spark DataFrame.
+
 
 ## Adding More Questions
 
