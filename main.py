@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 
-# --- Tumult Analytics API (Decision 1: Tumult over raw OpenDP / hand-rolled) ---
+# --- Tumult Analytics API ---
 from tmlt.analytics.session import Session
 from tmlt.analytics.query_builder import QueryBuilder
 from tmlt.analytics.keyset import KeySet
@@ -14,7 +14,7 @@ from tmlt.analytics.protected_change import AddOneRow    # AddMaxRows: see Decis
 from tmlt.analytics import CountMechanism
 
 # ===========================================================================
-# Decision — PureDP now, ApproxDP door left open.
+# Decision — PureDP now, ApproxDP door left open for next.
 # BUDGET_CLS is the single swap point. Moving to (epsilon, delta) DP means:
 #   1. from tmlt.analytics.privacy_budget import ApproxDPBudget
 #   2. BUDGET_CLS = ApproxDPBudget      (and give budget() a delta below)
