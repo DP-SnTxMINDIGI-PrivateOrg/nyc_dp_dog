@@ -75,7 +75,7 @@ def main():
     # --- Configuration (all .env-driven, zero code edits) ------------------
     CSV_PATH = env_str("CSV_PATH", "/data/nyc_dog_licenses.csv")
 
-    # Decision 6 — teaching allocation, NOT a production recommendation.
+    # Note — teaching allocation, NOT a production recommendation.
     # 3 questions x 0.5 = 1.5 spent of 3.0 lifetime; the 1.5 headroom lets you
     # re-run or add a 4th question in a demo without restarting the Session.
     # In production, size TOTAL to the sum of anticipated queries; leftover
@@ -83,7 +83,6 @@ def main():
     TOTAL_EPSILON = env_float("DP_TOTAL_EPSILON", 3.0)
     PER_QUERY_EPSILON = env_float("DP_PER_QUERY_EPSILON", 0.5)
 
-    # Decision 7 — SHOW_EXACT is ONLY legitimate because this dataset is public.
     # Never enable this for confidential data: it prints the true answer beside
     # the DP answer, which is a real privacy leak on non-public data.
     SHOW_EXACT = env_bool("SHOW_EXACT", True)
@@ -167,7 +166,7 @@ def main():
         print("   [budget] spent eps={:.3f}  remaining eps={:.3f}".format(spent, remaining))
 
     # =======================================================================
-    # Q1 — filter().count()   (Decision 2: simplest shape, scalar Laplace)
+    # Q1 — filter().count()   
     # Sensitivity = 1, noise scale = 1/epsilon. filter() is a stability-1
     # transformation and costs ZERO budget; only count() spends.
     # =======================================================================
@@ -189,7 +188,7 @@ def main():
     ledger()
 
     # =======================================================================
-    # Q2 — groupby(KeySet).count() + argmax   (Decision 2: histogram pattern)
+    # Q2 — groupby(KeySet).count() + argmax  
     # KeySet declares the public domain of names. argmax is post-processing of
     # an already-private histogram, so it is FREE — no extra budget.
     # =======================================================================
@@ -215,7 +214,7 @@ def main():
     ledger()
 
     # =======================================================================
-    # Q3 — filter().groupby(KeySet).count() + argmax   (Decision 2: both at once)
+    # Q3 — filter().groupby(KeySet).count() + argmax  
     # Proves filter (Queens ZIPs) composes with a group-by histogram without any
     # extra budget cost beyond the single count() spend.
     # =======================================================================
