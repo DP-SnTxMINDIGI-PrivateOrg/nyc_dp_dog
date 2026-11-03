@@ -1,0 +1,477 @@
+@SkyWarrior123 ➜ /workspaces/nyc_dp_dog (main) $ docker run --rm --platform linux/amd64   -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro"   -v "$PWD/.env:/app/.env:ro"   nyc-dog-dp
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/02 12:34:25 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+Questions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] | evaluate calls: 14 | planned epsilon: 6.5 | session cap: 13
+Protection: one INPUT licence row. Ledger is run-local; reruns compose.
+Extract filter: all input extracts | exact output: True
+
+Q1. How many licence records list CHIHUAHUA in ZIP 10022? [Original: filtered count]
+   Specification: Filter the configured breed and ZIP; release one noisy count.
+   Budget: spent=0.5; remaining=12.5
+   DP answer:
+     value=223
+   PUBLIC exact benchmark:
+     value=226
+
+Q2. Among the public candidate names, which name is most common? [Original: top name]
+   Specification: Release one name histogram; choose its largest noisy count, breaking ties alphabetically.
+   Budget: spent=1; remaining=12
+   DP answer:
+     animalname=BELLA | value=8900 | rank=1
+   PUBLIC exact benchmark:
+     animalname=BELLA | value=8899 | rank=1
+
+Q3. Among the public candidate breeds, which breed is most common in the configured Queens ZIP region? [Original: regional top breed]
+   Specification: Q3_ZIPS determines membership; Q3_BOROUGH is only a label. Release one breed histogram and select its noisy winner.
+   Budget: spent=1.5; remaining=11.5
+   DP answer:
+     breedname=YORKSHIRE TERRIER | value=9996 | rank=1
+   PUBLIC exact benchmark:
+     breedname=YORKSHIRE TERRIER | value=9995 | rank=1
+
+Q4. How many licence records are in the selected input? [1. Count]
+   Specification: One DP count of all retained rows; not a count of established unique dogs or owners.
+   Budget: spent=2; remaining=11
+   DP answer:
+     value=819324
+   PUBLIC exact benchmark:
+     value=819323
+
+Q5. How many records fall into each public gender category and the OTHER bucket? [2. Histogram]
+   Specification: One DP count histogram. Nonlisted, blank and missing gender values enter the configured other bucket.
+   Budget: spent=2.5; remaining=10.5
+   DP answer:
+     Gender=F | value=374800
+     Gender=M | value=444502
+     Gender=OTHER | value=17
+   PUBLIC exact benchmark:
+     Gender=M | value=444503
+     Gender=F | value=374799
+     Gender=OTHER | value=21
+
+Q6. What is the total age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years across the records? [3. Sum]
+   Specification: One bounded DP sum, excluding missing ages. Units: licence-record-years, not observed follow-up time.
+   Budget: spent=3; remaining=10
+   DP answer:
+     value=5009833.688005846
+   PUBLIC exact benchmark:
+     value=5009851.0
+
+Q7. What is the mean age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [4. Average]
+   Specification: One bounded Tumult average query on records with a usable age.
+   Budget: spent=3.5; remaining=9.5
+   DP answer:
+     value=6.1148911569778175
+   PUBLIC exact benchmark:
+     value=6.114846581137639
+
+Q8. What is quantile 0.5 of the age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [5. Quantile]
+   Specification: One bounded DP quantile query; 0.5 means median and 0.9 means 90th percentile. The result is randomized and can be fractional.
+   Budget: spent=4; remaining=9
+   DP answer:
+     value=5.823538667525279
+   PUBLIC exact benchmark:
+     value=5.0
+
+Q9. What is the sample standard deviation of the age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [6. Dispersion]
+   Specification: One bounded DP stdev query, in years. This is not uncertainty around the DP mean.
+   Budget: spent=4.5; remaining=8.5
+   DP answer:
+     value=4.412545053079331
+   PUBLIC exact benchmark:
+     value=4.41276215268669
+
+Q10. Which 5 public candidate breeds have the highest noisy record counts citywide? [7. Ranking]
+   Specification: One candidate-breed histogram, followed by top-k selection. Rankings do not cover breeds outside PUBLIC_BREEDS.
+   Budget: spent=5; remaining=8
+   DP answer:
+     breedname=YORKSHIRE TERRIER | value=44247 | rank=1
+     breedname=SHIH TZU | value=41109 | rank=2
+     breedname=CHIHUAHUA | value=31340 | rank=3
+     breedname=LABRADOR RETRIEVER | value=24586 | rank=4
+     breedname=MALTESE | value=22909 | rank=5
+   PUBLIC exact benchmark:
+     breedname=YORKSHIRE TERRIER | value=44249 | rank=1
+     breedname=SHIH TZU | value=41112 | rank=2
+     breedname=CHIHUAHUA | value=31339 | rank=3
+     breedname=LABRADOR RETRIEVER | value=24588 | rank=4
+     breedname=MALTESE | value=22909 | rank=5
+
+Q11. What proportion of records have an unknown or missing breed? [8. Ratio / proportion]
+   Specification: One unknown/known DP histogram. Unknown means a value in UNKNOWN_BREED_VALUES or a null/blank breed. Clip noisy counts at zero and divide unknown by their sum; n/a if that sum is too small.
+   Budget: spent=5.5; remaining=7.5
+   DP answer:
+     BreedStatus=known | value=747611
+     BreedStatus=unknown | value=71713
+   DP unknown/missing share (fraction): 0.087527
+   PUBLIC exact share, same stability rule: 0.0875259
+
+Q12. How many record appearances have an issue year in each year from 2014 through 2026? [9. Time series]
+   Specification: One issue-year DP histogram, plus OTHER and MISSING. Counts record appearances, not deduplicated issuances; repeated extracts and partial years can distort trends.
+   Budget: spent=6; remaining=7
+   DP answer:
+     IssueYear=2014 | value=1555
+     IssueYear=2015 | value=34714
+     IssueYear=2016 | value=77019
+     IssueYear=2017 | value=74284
+     IssueYear=2018 | value=72591
+     IssueYear=2019 | value=77399
+     IssueYear=2020 | value=110615
+     IssueYear=2021 | value=96280
+     IssueYear=2022 | value=54202
+     IssueYear=2023 | value=91142
+     IssueYear=2024 | value=84377
+     IssueYear=2025 | value=45143
+     IssueYear=2026 | value=0
+     IssueYear=MISSING | value=0
+     IssueYear=OTHER | value=-4
+   PUBLIC exact benchmark:
+     IssueYear=2014 | value=1557
+     IssueYear=2015 | value=34712
+     IssueYear=2016 | value=77015
+     IssueYear=2017 | value=74285
+     IssueYear=2018 | value=72593
+     IssueYear=2019 | value=77399
+     IssueYear=2020 | value=110612
+     IssueYear=2021 | value=96289
+     IssueYear=2022 | value=54201
+     IssueYear=2023 | value=91142
+     IssueYear=2024 | value=84376
+     IssueYear=2025 | value=45142
+     IssueYear=2026 | value=0
+     IssueYear=OTHER | value=0
+     IssueYear=MISSING | value=0
+
+Q13. What mean clamped age is obtained from a DP age sum divided by a DP eligible-record count? [10. Composite]
+   Specification: Two evaluate calls share ONE question allocation equally. Both use the same nonmissing-age rows. Divide if the noisy count passes the threshold; clip the quotient to the age bounds. This deliberately re-measures a mean for teaching rather than reusing Q7.
+   Budget: spent=6.25; remaining=6.75
+   Budget: spent=6.5; remaining=6.5
+   DP age sum: 5009523.359637121; DP eligible-record count: 819280
+   DP composite mean: 6.11454
+   PUBLIC exact composite, same stability rule: 6.11485
+
+Done. Session remaining: PureDPBudget(epsilon=6.5)
+-------------------------------------------------------------------------------------
+@SkyWarrior123 ➜ /workspaces/nyc_dp_dog (main) $ docker run --rm --platform linux/amd64   -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro"   -v "$PWD/.env:/app/.env:ro"   nyc-dog-dp
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/02 12:48:40 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+Questions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] | evaluate calls: 14 | planned epsilon: 3.25 | session cap: 13
+Protection: one INPUT licence row. Ledger is run-local; reruns compose.
+Extract filter: all input extracts | exact output: True
+
+Q1. How many licence records list CHIHUAHUA in ZIP 10022? [Original: filtered count]
+   Specification: Filter the configured breed and ZIP; release one noisy count.
+   Budget: spent=0.25; remaining=12.75
+   DP answer:
+     value=220
+   PUBLIC exact benchmark:
+     value=226
+
+Q2. Among the public candidate names, which name is most common? [Original: top name]
+   Specification: Release one name histogram; choose its largest noisy count, breaking ties alphabetically.
+   Budget: spent=0.5; remaining=12.5
+   DP answer:
+     animalname=BELLA | value=8901 | rank=1
+   PUBLIC exact benchmark:
+     animalname=BELLA | value=8899 | rank=1
+
+Q3. Among the public candidate breeds, which breed is most common in the configured Queens ZIP region? [Original: regional top breed]
+   Specification: Q3_ZIPS determines membership; Q3_BOROUGH is only a label. Release one breed histogram and select its noisy winner.
+   Budget: spent=0.75; remaining=12.25
+   DP answer:
+     breedname=YORKSHIRE TERRIER | value=10000 | rank=1
+   PUBLIC exact benchmark:
+     breedname=YORKSHIRE TERRIER | value=9995 | rank=1
+
+Q4. How many licence records are in the selected input? [1. Count]
+   Specification: One DP count of all retained rows; not a count of established unique dogs or owners.
+   Budget: spent=1; remaining=12
+   DP answer:
+     value=819327
+   PUBLIC exact benchmark:
+     value=819323
+
+Q5. How many records fall into each public gender category and the OTHER bucket? [2. Histogram]
+   Specification: One DP count histogram. Nonlisted, blank and missing gender values enter the configured other bucket.
+   Budget: spent=1.25; remaining=11.75
+   DP answer:
+     Gender=F | value=374808
+     Gender=M | value=444499
+     Gender=OTHER | value=28
+   PUBLIC exact benchmark:
+     Gender=M | value=444503
+     Gender=F | value=374799
+     Gender=OTHER | value=21
+
+Q6. What is the total age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years across the records? [3. Sum]
+   Specification: One bounded DP sum, excluding missing ages. Units: licence-record-years, not observed follow-up time.
+   Budget: spent=1.5; remaining=11.5
+   DP answer:
+     value=5009870.597232525
+   PUBLIC exact benchmark:
+     value=5009851.0
+
+Q7. What is the mean age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [4. Average]
+   Specification: One bounded Tumult average query on records with a usable age.
+   Budget: spent=1.75; remaining=11.25
+   DP answer:
+     value=6.114670522050891
+   PUBLIC exact benchmark:
+     value=6.114846581137639
+
+Q8. What is quantile 0.5 of the age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [5. Quantile]
+   Specification: One bounded DP quantile query; 0.5 means median and 0.9 means 90th percentile. The result is randomized and can be fractional.
+   Budget: spent=2; remaining=11
+   DP answer:
+     value=5.322001474606489
+   PUBLIC exact benchmark:
+     value=5.0
+
+Q9. What is the sample standard deviation of the age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [6. Dispersion]
+   Specification: One bounded DP stdev query, in years. This is not uncertainty around the DP mean.
+   Budget: spent=2.25; remaining=10.75
+   DP answer:
+     value=4.413467308224504
+   PUBLIC exact benchmark:
+     value=4.41276215268669
+
+Q10. Which 5 public candidate breeds have the highest noisy record counts citywide? [7. Ranking]
+   Specification: One candidate-breed histogram, followed by top-k selection. Rankings do not cover breeds outside PUBLIC_BREEDS.
+   Budget: spent=2.5; remaining=10.5
+   DP answer:
+     breedname=YORKSHIRE TERRIER | value=44252 | rank=1
+     breedname=SHIH TZU | value=41116 | rank=2
+     breedname=CHIHUAHUA | value=31313 | rank=3
+     breedname=LABRADOR RETRIEVER | value=24597 | rank=4
+     breedname=MALTESE | value=22913 | rank=5
+   PUBLIC exact benchmark:
+     breedname=YORKSHIRE TERRIER | value=44249 | rank=1
+     breedname=SHIH TZU | value=41112 | rank=2
+     breedname=CHIHUAHUA | value=31339 | rank=3
+     breedname=LABRADOR RETRIEVER | value=24588 | rank=4
+     breedname=MALTESE | value=22909 | rank=5
+
+Q11. What proportion of records have an unknown or missing breed? [8. Ratio / proportion]
+   Specification: One unknown/known DP histogram. Unknown means a value in UNKNOWN_BREED_VALUES or a null/blank breed. Clip noisy counts at zero and divide unknown by their sum; n/a if that sum is too small.
+   Budget: spent=2.75; remaining=10.25
+   DP answer:
+     BreedStatus=known | value=747622
+     BreedStatus=unknown | value=71711
+   DP unknown/missing share (fraction): 0.0875236
+   PUBLIC exact share, same stability rule: 0.0875259
+
+Q12. How many record appearances have an issue year in each year from 2014 through 2026? [9. Time series]
+   Specification: One issue-year DP histogram, plus OTHER and MISSING. Counts record appearances, not deduplicated issuances; repeated extracts and partial years can distort trends.
+   Budget: spent=3; remaining=10
+   DP answer:
+     IssueYear=2014 | value=1553
+     IssueYear=2015 | value=34707
+     IssueYear=2016 | value=77012
+     IssueYear=2017 | value=74279
+     IssueYear=2018 | value=72594
+     IssueYear=2019 | value=77399
+     IssueYear=2020 | value=110614
+     IssueYear=2021 | value=96288
+     IssueYear=2022 | value=54204
+     IssueYear=2023 | value=91140
+     IssueYear=2024 | value=84382
+     IssueYear=2025 | value=45133
+     IssueYear=2026 | value=0
+     IssueYear=MISSING | value=-1
+     IssueYear=OTHER | value=-5
+   PUBLIC exact benchmark:
+     IssueYear=2014 | value=1557
+     IssueYear=2015 | value=34712
+     IssueYear=2016 | value=77015
+     IssueYear=2017 | value=74285
+     IssueYear=2018 | value=72593
+     IssueYear=2019 | value=77399
+     IssueYear=2020 | value=110612
+     IssueYear=2021 | value=96289
+     IssueYear=2022 | value=54201
+     IssueYear=2023 | value=91142
+     IssueYear=2024 | value=84376
+     IssueYear=2025 | value=45142
+     IssueYear=2026 | value=0
+     IssueYear=OTHER | value=0
+     IssueYear=MISSING | value=0
+
+Q13. What mean clamped age is obtained from a DP age sum divided by a DP eligible-record count? [10. Composite]
+   Specification: Two evaluate calls share ONE question allocation equally. Both use the same nonmissing-age rows. Divide if the noisy count passes the threshold; clip the quotient to the age bounds. This deliberately re-measures a mean for teaching rather than reusing Q7.
+   Budget: spent=3.125; remaining=9.875
+   Budget: spent=3.25; remaining=9.75
+   DP age sum: 5009784.721201457; DP eligible-record count: 819291
+   DP composite mean: 6.11478
+   PUBLIC exact composite, same stability rule: 6.11485
+
+Done. Session remaining: PureDPBudget(epsilon=9.75)
+
+@SkyWarrior123 ➜ /workspaces/nyc_dp_dog (main) $ docker run --rm --platform linux/amd64   -v "$PWD/data/nyc_dog_licenses.csv:/data/nyc_dog_licenses.csv:ro"   -v "$PWD/.env:/app/.env:ro"   nyc-dog-dp
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/02 12:56:02 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+/usr/local/lib/python3.10/dist-packages/pyspark/sql/pandas/functions.py:407: UserWarning: In Python 3.6+ and Spark 3.0+, it is preferred to specify type hints for pandas UDF instead of specifying pandas UDF type which will be deprecated in the future releases. See SPARK-28264 for more details.
+  warnings.warn(
+Questions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] | evaluate calls: 14 | planned epsilon: 1.3 | session cap: 13
+Protection: one INPUT licence row. Ledger is run-local; reruns compose.
+Extract filter: all input extracts | exact output: True
+
+Q1. How many licence records list CHIHUAHUA in ZIP 10022? [Original: filtered count]
+   Specification: Filter the configured breed and ZIP; release one noisy count.
+   Budget: spent=0.1; remaining=12.9
+   DP answer:
+     value=222
+   PUBLIC exact benchmark:
+     value=226
+
+Q2. Among the public candidate names, which name is most common? [Original: top name]
+   Specification: Release one name histogram; choose its largest noisy count, breaking ties alphabetically.
+   Budget: spent=0.2; remaining=12.8
+   DP answer:
+     animalname=BELLA | value=8905 | rank=1
+   PUBLIC exact benchmark:
+     animalname=BELLA | value=8899 | rank=1
+
+Q3. Among the public candidate breeds, which breed is most common in the configured Queens ZIP region? [Original: regional top breed]
+   Specification: Q3_ZIPS determines membership; Q3_BOROUGH is only a label. Release one breed histogram and select its noisy winner.
+   Budget: spent=0.3; remaining=12.7
+   DP answer:
+     breedname=YORKSHIRE TERRIER | value=9991 | rank=1
+   PUBLIC exact benchmark:
+     breedname=YORKSHIRE TERRIER | value=9995 | rank=1
+
+Q4. How many licence records are in the selected input? [1. Count]
+   Specification: One DP count of all retained rows; not a count of established unique dogs or owners.
+   Budget: spent=0.4; remaining=12.6
+   DP answer:
+     value=819302
+   PUBLIC exact benchmark:
+     value=819323
+
+Q5. How many records fall into each public gender category and the OTHER bucket? [2. Histogram]
+   Specification: One DP count histogram. Nonlisted, blank and missing gender values enter the configured other bucket.
+   Budget: spent=0.5; remaining=12.5
+   DP answer:
+     Gender=F | value=374843
+     Gender=M | value=444487
+     Gender=OTHER | value=25
+   PUBLIC exact benchmark:
+     Gender=M | value=444503
+     Gender=F | value=374799
+     Gender=OTHER | value=21
+
+Q6. What is the total age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years across the records? [3. Sum]
+   Specification: One bounded DP sum, excluding missing ages. Units: licence-record-years, not observed follow-up time.
+   Budget: spent=0.6; remaining=12.4
+   DP answer:
+     value=5009765.238997141
+   PUBLIC exact benchmark:
+     value=5009851.0
+
+Q7. What is the mean age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [4. Average]
+   Specification: One bounded Tumult average query on records with a usable age.
+   Budget: spent=0.7; remaining=12.3
+   DP answer:
+     value=6.114645108901852
+   PUBLIC exact benchmark:
+     value=6.114846581137639
+
+Q8. What is quantile 0.5 of the age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [5. Quantile]
+   Specification: One bounded DP quantile query; 0.5 means median and 0.9 means 90th percentile. The result is randomized and can be fractional.
+   Budget: spent=0.8; remaining=12.2
+   DP answer:
+     value=5.4471469593077515
+   PUBLIC exact benchmark:
+     value=5.0
+
+Q9. What is the sample standard deviation of the age proxy (ExtractYear minus AnimalBirthYear), clamped to [0, 25] years? [6. Dispersion]
+   Specification: One bounded DP stdev query, in years. This is not uncertainty around the DP mean.
+   Budget: spent=0.9; remaining=12.1
+   DP answer:
+     value=4.411640349234131
+   PUBLIC exact benchmark:
+     value=4.41276215268669
+
+Q10. Which 5 public candidate breeds have the highest noisy record counts citywide? [7. Ranking]
+   Specification: One candidate-breed histogram, followed by top-k selection. Rankings do not cover breeds outside PUBLIC_BREEDS.
+   Budget: spent=1; remaining=12
+   DP answer:
+     breedname=YORKSHIRE TERRIER | value=44255 | rank=1
+     breedname=SHIH TZU | value=41106 | rank=2
+     breedname=CHIHUAHUA | value=31350 | rank=3
+     breedname=LABRADOR RETRIEVER | value=24586 | rank=4
+     breedname=MALTESE | value=22912 | rank=5
+   PUBLIC exact benchmark:
+     breedname=YORKSHIRE TERRIER | value=44249 | rank=1
+     breedname=SHIH TZU | value=41112 | rank=2
+     breedname=CHIHUAHUA | value=31339 | rank=3
+     breedname=LABRADOR RETRIEVER | value=24588 | rank=4
+     breedname=MALTESE | value=22909 | rank=5
+
+Q11. What proportion of records have an unknown or missing breed? [8. Ratio / proportion]
+   Specification: One unknown/known DP histogram. Unknown means a value in UNKNOWN_BREED_VALUES or a null/blank breed. Clip noisy counts at zero and divide unknown by their sum; n/a if that sum is too small.
+   Budget: spent=1.1; remaining=11.9
+   DP answer:
+     BreedStatus=known | value=747594
+     BreedStatus=unknown | value=71723
+   DP unknown/missing share (fraction): 0.08754
+   PUBLIC exact share, same stability rule: 0.0875259
+
+Q12. How many record appearances have an issue year in each year from 2014 through 2026? [9. Time series]
+   Specification: One issue-year DP histogram, plus OTHER and MISSING. Counts record appearances, not deduplicated issuances; repeated extracts and partial years can distort trends.
+   Budget: spent=1.2; remaining=11.8
+   DP answer:
+     IssueYear=2014 | value=1607
+     IssueYear=2015 | value=34713
+     IssueYear=2016 | value=77001
+     IssueYear=2017 | value=74295
+     IssueYear=2018 | value=72594
+     IssueYear=2019 | value=77399
+     IssueYear=2020 | value=110613
+     IssueYear=2021 | value=96301
+     IssueYear=2022 | value=54201
+     IssueYear=2023 | value=91139
+     IssueYear=2024 | value=84370
+     IssueYear=2025 | value=45142
+     IssueYear=2026 | value=-11
+     IssueYear=MISSING | value=-11
+     IssueYear=OTHER | value=4
+   PUBLIC exact benchmark:
+     IssueYear=2014 | value=1557
+     IssueYear=2015 | value=34712
+     IssueYear=2016 | value=77015
+     IssueYear=2017 | value=74285
+     IssueYear=2018 | value=72593
+     IssueYear=2019 | value=77399
+     IssueYear=2020 | value=110612
+     IssueYear=2021 | value=96289
+     IssueYear=2022 | value=54201
+     IssueYear=2023 | value=91142
+     IssueYear=2024 | value=84376
+     IssueYear=2025 | value=45142
+     IssueYear=2026 | value=0
+     IssueYear=OTHER | value=0
+     IssueYear=MISSING | value=0
+
+Q13. What mean clamped age is obtained from a DP age sum divided by a DP eligible-record count? [10. Composite]
+   Specification: Two evaluate calls share ONE question allocation equally. Both use the same nonmissing-age rows. Divide if the noisy count passes the threshold; clip the quotient to the age bounds. This deliberately re-measures a mean for teaching rather than reusing Q7.
+   Budget: spent=1.25; remaining=11.75
+   Budget: spent=1.3; remaining=11.7
+   DP age sum: 5010190.444858642; DP eligible-record count: 819287
+   DP composite mean: 6.11531
+   PUBLIC exact composite, same stability rule: 6.11485
+
+Done. Session remaining: PureDPBudget(epsilon=11.7)
+
